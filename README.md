@@ -18,7 +18,7 @@ Aplikasi ini menganalisis pola penyewaan sepeda berdasarkan berbagai faktor sepe
 
 ### 1️⃣ **Clone Repository**
 ```bash
-git clone https://github.com/AndrianFakhruza/Bike-Sharing-Data-Analysis-DBS.git
+git clone https://github.com/Juanda435/Bike-Sharing-Data-Analysis-DBS.git
 cd Bike-Sharing-Data-Analysis-DBS
 ```
 
@@ -36,7 +36,7 @@ Aplikasi akan terbuka di browser secara otomatis.
 
 ### 4️⃣ **Akses Aplikasi yang Telah Dideploy**
 Aplikasi ini telah dideploy dan dapat diakses secara online melalui tautan berikut:
-👉 [**Buka Aplikasi**](https://bike-sharing-data-analysis-dbs.streamlit.app/)
+👉 [**Buka Aplikasi**](https://bike-sharing-data-analysis-dbs-xwpo2w7peyxbtwwhgxcljd.streamlit.app/)
 
 ---
 
