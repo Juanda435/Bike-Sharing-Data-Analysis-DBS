@@ -2,57 +2,79 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
-# **Load Dataset**
+# **Menentukan lokasi file CSV secara dinamis**
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Lokasi file dashboard.py
+DATA_DIR = os.path.join(BASE_DIR, "../data")  # Mengarah ke folder data/
+
+# **Cek apakah file tersedia**
+st.write("📂 Current Directory:", os.getcwd())  # Debugging
+st.write("📜 Files:", os.listdir(DATA_DIR))  # Debugging
+
+# **Fungsi untuk memuat data**
 @st.cache_data
 def load_data():
-    day_df = pd.read_csv("../dashboard/day.csv")
-    hour_df = pd.read_csv("../dashboard/hour.csv")
+    day_path = os.path.join(DATA_DIR, "day.csv")
+    hour_path = os.path.join(DATA_DIR, "hour.csv")
     
-    # Rename kolom agar lebih mudah dipahami
+    if not os.path.exists(day_path) or not os.path.exists(hour_path):
+        st.error("🚨 File data tidak ditemukan! Pastikan file day.csv dan hour.csv ada di folder data/")
+        return None, None
+
+    day_df = pd.read_csv(day_path)
+    hour_df = pd.read_csv(hour_path)
+
+    # **Rename kolom agar lebih deskriptif**
     day_df.rename(columns={
         'yr': 'year', 'mnth': 'month', 'temp': 'temperature',
         'hum': 'humidity', 'windspeed': 'wind_speed', 'cnt': 'total_rentals'
     }, inplace=True)
-    
+
     hour_df.rename(columns={'hr': 'hour', 'cnt': 'total_rentals'}, inplace=True)
-    
+
     return day_df, hour_df
 
-# Memuat data
+# **Memuat data**
 day_df, hour_df = load_data()
 
-# Sidebar untuk navigasi
+if day_df is None or hour_df is None:
+    st.stop()  # Hentikan aplikasi jika data tidak tersedia
+
+# **Sidebar untuk navigasi**
 st.sidebar.title("🚲 Bike Rental Data Analysis")
 option = st.sidebar.selectbox("Pilih Visualisasi", ["Kapan Waktu Terbaik Menyewa?", "Faktor yang Mempengaruhi Penyewaan"])
 
-# **1. Kapan waktu terbaik untuk menyewa sepeda?**
+# **1️⃣ Kapan Waktu Terbaik untuk Menyewa Sepeda?**
 if option == "Kapan Waktu Terbaik Menyewa?":
     st.header("📈 Kapan Waktu Terbaik untuk Menyewa Sepeda?")
     
     st.write("""
     Berdasarkan data rata-rata penyewaan sepeda per jam, kita bisa melihat kapan waktu terbaik untuk menyewa sepeda.
-    Umumnya, penyewaan sepeda paling tinggi terjadi pada jam-jam tertentu, misalnya saat jam berangkat kerja (pagi) atau setelah jam kerja (sore/malam).
+    Biasanya penyewaan sepeda paling tinggi terjadi di jam-jam tertentu, misalnya saat jam berangkat kerja atau pulang kerja.
     """)
     
-    # Membuat visualisasi
+    # **Visualisasi rata-rata penyewaan per jam**
     fig, ax = plt.subplots(figsize=(10, 5))
-    sns.lineplot(x=hour_df.groupby('hour')['total_rentals'].mean().index,
-                 y=hour_df.groupby('hour')['total_rentals'].mean().values,
-                 marker='o', ax=ax)
+    sns.lineplot(
+        x=hour_df.groupby('hour')['total_rentals'].mean().index,
+        y=hour_df.groupby('hour')['total_rentals'].mean().values,
+        marker='o', ax=ax
+    )
     ax.set_title("Rata-rata Penyewaan Sepeda per Jam")
     ax.set_xlabel("Jam")
     ax.set_ylabel("Rata-rata Penyewaan")
     ax.grid(True)
-    
+
     st.pyplot(fig)
 
     st.write("""
-    Dari grafik di atas, kita bisa menyimpulkan bahwa waktu terbaik untuk menyewa sepeda adalah saat jam **pagi hari (sekitar jam 7-9)** 
-    dan **sore/malam (sekitar jam 17-19)**, karena pada waktu tersebut permintaan penyewaan sepeda meningkat tajam.
+    🚴 Dari grafik di atas, waktu terbaik untuk menyewa sepeda adalah:
+    - **Pagi hari (07:00 - 09:00)** → Saat orang berangkat kerja/sekolah.
+    - **Sore/Malam (17:00 - 19:00)** → Saat orang pulang kerja.
     """)
 
-# **2. Faktor apa yang paling mempengaruhi jumlah penyewaan sepeda?**
+# **2️⃣ Faktor yang Mempengaruhi Penyewaan**
 elif option == "Faktor yang Mempengaruhi Penyewaan":
     st.header("📊 Faktor yang Mempengaruhi Penyewaan Sepeda")
     
@@ -62,6 +84,7 @@ elif option == "Faktor yang Mempengaruhi Penyewaan":
     Korelasi negatif berarti semakin tinggi faktor tersebut, semakin rendah jumlah penyewaan.
     """)
     
+    # **Heatmap Korelasi**
     correlation = day_df[['temperature', 'humidity', 'wind_speed', 'total_rentals']].corr()
     
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -71,11 +94,11 @@ elif option == "Faktor yang Mempengaruhi Penyewaan":
     st.pyplot(fig)
 
     st.write("""
-    **Kesimpulan:**
-    - Suhu (**temperature**) memiliki korelasi positif tinggi dengan jumlah penyewaan, artinya semakin hangat cuaca, semakin banyak orang menyewa sepeda.
-    - Kelembaban (**humidity**) memiliki korelasi negatif sedang, yang berarti saat kelembaban tinggi, penyewaan cenderung menurun.
-    - Kecepatan angin (**wind_speed**) memiliki korelasi negatif lemah, artinya angin kencang sedikit mempengaruhi penurunan penyewaan, tetapi tidak signifikan.
+    **📌 Kesimpulan:**
+    - **Suhu (temperature)** memiliki korelasi positif tinggi → semakin hangat cuaca, semakin banyak orang menyewa sepeda.
+    - **Kelembaban (humidity)** memiliki korelasi negatif sedang → kelembaban tinggi membuat orang malas menyewa sepeda.
+    - **Kecepatan angin (wind_speed)** memiliki korelasi negatif lemah → angin kencang sedikit mempengaruhi penurunan penyewaan.
     """)
 
-# Informasi tambahan di sidebar
+# **Sidebar info tambahan**
 st.sidebar.info("Pilih visualisasi dari dropdown di atas untuk melihat analisis.")
