@@ -9,8 +9,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Lokasi file dashboard.p
 DATA_DIR = os.path.join(BASE_DIR, "../data")  # Mengarah ke folder data/
 
 # **Cek apakah file tersedia**
-st.write("📂 Current Directory:", os.getcwd())  # Debugging
-st.write("📜 Files:", os.listdir(DATA_DIR))  # Debugging
+# st.write("📂 Current Directory:", os.getcwd())  # Debugging
+# st.write("📜 Files:", os.listdir(DATA_DIR))  # Debugging
 
 # **Fungsi untuk memuat data**
 @st.cache_data
