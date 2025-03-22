@@ -3,5 +3,4 @@ NumPy==2.0.2
 Pandas==2.2.2
 Matplotlib==3.10.0
 Seaborn==0.13.2
-OS==posix
 plotly==6.0.0
