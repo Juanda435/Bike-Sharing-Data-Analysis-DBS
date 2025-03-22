@@ -1,6 +1,12 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')  
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
 
 # Load dataset
 df = pd.read_csv("../dashboard/all_data.csv")
