@@ -8,20 +8,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-# # Load dataset
-# df = pd.read_csv("all_data.csv")
-def load_data():
-    # Pastikan path dataset benar
-    base_path = "Dashboard"  # Folder tempat dataset disimpan
-    file_name = "all_data.csv"  # Nama file dataset
-    file_path = os.path.join(base_path, file_name)  # Gabungkan path dengan aman
-    
-    # Load dataset
-    df = pd.read_csv(file_path)
-    return df
-
-# Contoh pemanggilan fungsi
-df = load_data()
+# Load dataset
+df = pd.read_csv("../dashboard/all_data.csv")
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter Data")
