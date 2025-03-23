@@ -9,7 +9,7 @@ import seaborn as sns
 import os
 
 # Load dataset
-df = pd.read_csv("../Bike-Sharing-Data-Analysis-DBS/dashboard/all_data.csv")
+df = pd.read_csv("all_data.csv")
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter Data")
