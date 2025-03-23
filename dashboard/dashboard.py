@@ -9,7 +9,14 @@ import seaborn as sns
 import os
 
 # Load dataset
-df = pd.read_csv("all_data.csv")
+# df = pd.read_csv("all_data.csv")
+
+base_path = os.path.dirname(os.path.abspath(__file__))  # Path dari file dashboard.py
+file_path = os.path.join(base_path, "all_data.csv")  # Gabungkan path
+
+df = pd.read_csv(file_path)
+
+
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter Data")
